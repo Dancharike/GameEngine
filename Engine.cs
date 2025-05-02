@@ -1,7 +1,6 @@
 ﻿using GameEngine.core;
 using GameEngine.graphics;
 using GameEngine.interfaces;
-using GameEngine.shapes;
 using GameEngine.window;
 
 namespace GameEngine;
@@ -13,14 +12,14 @@ public class Engine
 {
     public void Start(IScene scene, string title, int width, int height)
     {
-        var shapeManager = new ShapeManager();
         var window = new WindowHost(title, width, height);
-        var renderer = new Renderer(window, shapeManager);
 
-        if (scene is IUsesShapeManager smScene)
+        if (scene is not IRenderSource renderSource)
         {
-            smScene.SetShapeManager(shapeManager);
+            throw new InvalidOperationException("Scene must implement IRenderSource to support rendering.");
         }
+        
+        var renderer = new Renderer(window, renderSource);
 
         Thread gameThread = new(() =>
         {

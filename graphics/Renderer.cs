@@ -1,4 +1,4 @@
-﻿using GameEngine.shapes;
+﻿using GameEngine.interfaces;
 using GameEngine.window;
 
 namespace GameEngine.graphics;
@@ -9,12 +9,12 @@ namespace GameEngine.graphics;
 public class Renderer
 {
     private readonly WindowHost _window;
-    private readonly ShapeManager _shapeManager;
+    private readonly IRenderSource _renderSource;
 
-    public Renderer(WindowHost window, ShapeManager shapeManager)
+    public Renderer(WindowHost window, IRenderSource renderSource)
     {
         _window = window;
-        _shapeManager = shapeManager;
+        _renderSource = renderSource;
 
         // подписка на событие отображения окна
         _window.Paint += OnPaint;
@@ -26,9 +26,9 @@ public class Renderer
         g.Clear(Color.Black); // цвет фона по умолчанию
 
         // вызов метода Render() у каждого существующего объекта
-        foreach (var shape in _shapeManager.GetAll())
+        foreach (var renderable in _renderSource.GetRenderables())
         {
-            shape.Render(g);
+            renderable.Render(g);
         }
     }
 
