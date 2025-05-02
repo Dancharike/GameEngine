@@ -1,10 +1,13 @@
 ﻿using GameEngine;
+using GameEngine.core;
 
 public class Program
 {
     [STAThread]
     public static void Main(string[] args)
     {
+        EventBindings.RegisterEvents();
+        
         Engine engine = new Engine();
         DemoGame game = new DemoGame();
 

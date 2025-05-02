@@ -1,4 +1,6 @@
-﻿namespace GameEngine.utility;
+﻿using GameEngine.events;
+
+namespace GameEngine.utility;
 
 /// <summary>
 /// Отслеживание нажатых клавиш.
@@ -10,6 +12,9 @@ public class InputManager
     public static void RegisterKeyDown(Keys key)
     {
         _pressedKeys.Add(key);
+
+        // рассылка события нажатой кнопки
+        EventBus.Publish(new KeyPressedEvent(key));
     }
 
     public static void RegisterKeyUp(Keys key)

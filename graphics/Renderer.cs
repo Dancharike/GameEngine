@@ -9,7 +9,7 @@ namespace GameEngine.graphics;
 public class Renderer
 {
     private readonly WindowHost _window;
-    private readonly IRenderSource _renderSource;
+    private IRenderSource _renderSource;
 
     public Renderer(WindowHost window, IRenderSource renderSource)
     {
@@ -37,6 +37,25 @@ public class Renderer
     /// </summary>
     public void RenderFrame()
     {
-        _window.Invoke((MethodInvoker)(() => _window.Refresh()));
+        try
+        {
+            if (!_window.IsDisposed)
+            {
+                _window.Invoke((MethodInvoker)(() => _window.Refresh()));
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            // окно не закрыто - игнорировать
+        }
+        catch (InvalidOperationException)
+        {
+            // поток закрыт - игнорировать
+        }
+    }
+
+    public void SetRenderSource(IRenderSource source)
+    {
+        _renderSource = source;
     }
 }

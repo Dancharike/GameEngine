@@ -20,14 +20,19 @@ public class Engine
         }
         
         var renderer = new Renderer(window, renderSource);
+        var gameLoop = new GameLoop(scene, renderer);
 
-        Thread gameThread = new(() =>
+        // остановить текущий GameLoop при закрытии окна приложения
+        window.FormClosed += (_, _) =>
         {
-            var loop = new GameLoop(scene, renderer);
-            loop.Run();
-        });
+            gameLoop.Stop();
+            Environment.Exit(0);
+        };
         
-        gameThread.Start();
+        // инициализация Game-контекста
+        Game.Initialize(scene, window, renderer);
+        
+        // запуск окошка игры
         Application.Run(window);
     }
 }

@@ -12,6 +12,8 @@ public class GameLoop
     private readonly Renderer _renderer;
     private readonly int _frameDelay;
 
+    private bool _running = true;
+
     public GameLoop(IScene scene, Renderer renderer, int targetFPS = 60)
     {
         _scene = scene;
@@ -19,11 +21,16 @@ public class GameLoop
         _frameDelay = 1000 / targetFPS;
     }
 
+    public void Stop()
+    {
+        _running = false;
+    }
+    
     public void Run()
     {
         _scene.Load();
 
-        while (true)
+        while (_running)
         {
             _scene.Update();
             _renderer.RenderFrame();

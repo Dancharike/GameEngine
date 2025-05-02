@@ -1,4 +1,5 @@
 ﻿using GameEngine.core;
+using GameEngine.events;
 using GameEngine.interfaces;
 using GameEngine.shapes;
 using GameEngine.utility;
@@ -13,6 +14,29 @@ public class DemoGame : IScene, IRenderSource
     
     public void Load()
     {
+        // здесь можно на разные кнопки с клавиатуры назначать разную логику кода
+        EventBus.Subscribe<KeyPressedEvent>(e =>
+        {
+            if (e.Key == Keys.Escape)
+            {
+                Log.Event("Exiting the game.");
+                Game.Exit();
+            }
+
+            if (e.Key == Keys.R)
+            {
+                Log.Event("Restarting the scene...");
+                Game.SceneRestart();
+            }
+
+            if (e.Key == Keys.Z)
+            {
+                Log.Event("Restarting the game...");
+                Game.GameRestart();
+            }
+            
+        });
+        
         var collider = new BoxCollider(new Vector2(10, 10), new Vector2(50, 50));
         var visual = new BoxVisual(Color.Red);
 
