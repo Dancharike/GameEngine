@@ -1,6 +1,7 @@
 ﻿using GameEngine.core;
 using GameEngine.events;
 using GameEngine.interfaces;
+using GameEngine.multi_thread;
 using GameEngine.shapes;
 using GameEngine.utility;
 using GameEngine.visuals;
@@ -11,9 +12,13 @@ public class DemoGame : IScene, IRenderSource
 {
     private List<GameObject> _objects = new();
     private GameObject _player;
+    private ActivityAnalyzer _analyzer;
     
     public void Load()
     {
+        _analyzer = new ActivityAnalyzer();
+        _analyzer.Start();
+        
         // здесь можно на разные кнопки с клавиатуры назначать разную логику кода
         EventBus.Subscribe<KeyPressedEvent>(e =>
         {
@@ -21,6 +26,7 @@ public class DemoGame : IScene, IRenderSource
             {
                 Log.Event("Exiting the game.");
                 Game.Exit();
+                _analyzer.Stop();
             }
 
             if (e.Key == Keys.R)
@@ -47,11 +53,32 @@ public class DemoGame : IScene, IRenderSource
     public void Update()
     {
         float speed = 2f;
+
+        if (InputManager.IsKeyPressed(Keys.W))
+        {
+            _player.Position.Y -= speed;
+            KeyLogger.Log(Keys.W);
+        }
+
+        if (InputManager.IsKeyPressed(Keys.S))
+        {
+            _player.Position.Y += speed;
+            KeyLogger.Log(Keys.S);
+        }
+
+        if (InputManager.IsKeyPressed(Keys.A))
+        {
+            _player.Position.X -= speed;
+            KeyLogger.Log(Keys.A);
+        }
+
+        if (InputManager.IsKeyPressed(Keys.D))
+        {
+            _player.Position.X += speed;
+            KeyLogger.Log(Keys.D);
+        }
         
-        if(InputManager.IsKeyPressed(Keys.W)) {_player.Position.Y -= speed;}
-        if(InputManager.IsKeyPressed(Keys.S)) {_player.Position.Y += speed;}
-        if(InputManager.IsKeyPressed(Keys.A)) {_player.Position.X -= speed;}
-        if(InputManager.IsKeyPressed(Keys.D)) {_player.Position.X += speed;}
+        KeyLogger.Flush();
     }
 
     public IEnumerable<IRender> GetRenderables()
