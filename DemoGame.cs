@@ -4,7 +4,6 @@ using GameEngine.interfaces;
 using GameEngine.multi_thread;
 using GameEngine.shapes;
 using GameEngine.utility;
-using GameEngine.visuals;
 
 namespace GameEngine;
 
@@ -44,9 +43,10 @@ public class DemoGame : IScene, IRenderSource
         });
         
         var collider = new BoxCollider(new Vector2(10, 10), new Vector2(50, 50));
-        var visual = new BoxVisual(Color.Red);
+        //var sprite = SpriteLoader.LoadSprite("spr_player");
+        var sprite = SpriteLoader.LoadSpriteFromFrames("spr_player_down", 6, 12);
 
-        _player = new GameObject("Player", collider, visual);
+        _player = new GameObject("Player", collider, sprite);
         _objects.Add(_player);
     }
 
