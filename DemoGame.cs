@@ -11,6 +11,7 @@ public class DemoGame : IScene, IRenderSource
 {
     private List<GameObject> _objects = new();
     private GameObject _player;
+    private GameObject _wall;
     private ActivityAnalyzer _analyzer;
     
     public void Load()
@@ -45,9 +46,15 @@ public class DemoGame : IScene, IRenderSource
         var collider = new BoxCollider(new Vector2(10, 10), new Vector2(50, 50));
         //var sprite = SpriteLoader.LoadSprite("spr_player");
         var sprite = SpriteLoader.LoadSpriteFromFrames("spr_player_down", 6, 12);
-
+        
+        //var wall_collider = new BoxCollider(new Vector2(50, 50), new Vector2(25, 25));
+        //var wall_sprite = SpriteLoader.LoadSprite("spr_wall_tile_2");
+        
         _player = new GameObject("Player", collider, sprite);
         _objects.Add(_player);
+        
+        //_wall = new GameObject("Wall", wall_collider, wall_sprite);
+        //_objects.Add(_wall);
     }
 
     public void Update()

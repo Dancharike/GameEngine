@@ -1,53 +1,72 @@
-﻿using System.Diagnostics;
+﻿using System.Text;
 
 namespace GameEngine.multi_thread;
 
+/// <summary>
+/// Класс для периодического анализа активности игрока по лог-файлу.
+/// Считывает log.txt, подсчитывает количество нажатий каждой клавиши и сохраняет отчёт.
+/// Работает в отдельном потоке, чтобы не блокировать игровой цикл.
+/// </summary>
 public class ActivityAnalyzer
 {
     private readonly string _logPath;
     private readonly string _reportPath;
     private bool _running = true;
 
+    /// <param name="logPath">Путь к лог-файлу с нажатыми клавишами</param>
+    /// <param name="reportPath">Путь к выходному файлу-отчёту</param>
     public ActivityAnalyzer(string logPath = "log.txt", string reportPath = "report.txt")
     {
         _logPath = logPath;
         _reportPath = reportPath;
     }
-    
+
+    /// <summary>
+    /// Запускает анализатор в отдельном фоновом потоке.
+    /// </summary>
     public void Start()
     {
         Thread thread = new(() =>
         {
             while (_running)
             {
-                Thread.Sleep(10000); // анализ каждые 10 секунд
-
-                if (!File.Exists(_logPath)) {continue;}
-
-                var lines = File.ReadAllLines(_logPath);
-                var keyCounts = new Dictionary<string, int>();
-
-                foreach (var line in lines)
+                Thread.Sleep(10000); // 10 секунд
+                try
                 {
-                    if (line.Contains(" - "))
+                    // открыть лог-файл на чтение, разрешая одновременную запись из другого потока
+                    using var stream = new FileStream(_logPath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+                    using var reader = new StreamReader(stream, Encoding.UTF8);
+
+                    var keyCounts = new Dictionary<string, int>();
+                    string? line;
+
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        var parts = line.Split(" - ");
-                        if (parts.Length == 2)
+                        if (line.Contains(" - "))
                         {
-                            string key = parts[1];
-                            if (!keyCounts.ContainsKey(key))
+                            var parts = line.Split(" - ");
+                            if (parts.Length == 2)
                             {
-                                keyCounts[key] = 0;
+                                string key = parts[1];
+                                if (!keyCounts.ContainsKey(key))
+                                {
+                                    keyCounts[key] = 0;
+                                }
+                                keyCounts[key]++;
                             }
-                            keyCounts[key]++;
                         }
                     }
-                }
 
-                using StreamWriter writer = new(_reportPath, false);
-                foreach (var kv in keyCounts.OrderByDescending(kv => kv.Value))
+                    // сохранить статистику в report.txt
+                    using StreamWriter writer = new(_reportPath, false);
+                    foreach (var kv in keyCounts.OrderByDescending(kv => kv.Value))
+                    {
+                        writer.WriteLine($"{kv.Key}: {kv.Value} times");
+                    }
+                }
+                catch (IOException e)
                 {
-                    writer.WriteLine($"{kv.Key}: {kv.Value} times");
+                    Console.WriteLine($"[Analyzer] Analysis error: {e.Message}");
                 }
             }
         });
@@ -56,5 +75,8 @@ public class ActivityAnalyzer
         thread.Start();
     }
 
+    /// <summary>
+    /// Останавливает анализатор (вызвать перед выходом из игры).
+    /// </summary>
     public void Stop() => _running = false;
 }
