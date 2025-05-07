@@ -12,6 +12,8 @@ public class Renderer
     private readonly WindowHost _window;
     private IRenderSource _renderSource;
     private CameraComponent? _camera;
+    
+    private int _currentFps;
 
     public Renderer(WindowHost window, IRenderSource renderSource, CameraComponent? camera = null)
     {
@@ -27,7 +29,7 @@ public class Renderer
         // подписка на событие отображения окна
         _window.Paint += OnPaint;
     }
-
+    
     private void OnPaint(object? sender, PaintEventArgs e)
     {
         Graphics g = e.Graphics;
@@ -52,18 +54,26 @@ public class Renderer
         }
         
         g.ResetTransform();
+
+        if (_currentFps >= 0)
+        {
+            using var font = new Font("Consolas", 12f, FontStyle.Bold);
+            using var brush = new SolidBrush(Color.Green);
+            g.DrawString($"FPS: {_currentFps}", font, brush, 10, 10);
+        }
     }
 
     /// <summary>
     /// Вызывает перерисовку окна (асинхронно с потока).
     /// </summary>
-    public void RenderFrame()
+    public void RenderFrame(int fps = -1)
     {
+        _currentFps = fps;
         try
         {
             if (!_window.IsDisposed)
             {
-                _window.Invoke((MethodInvoker)(() => _window.Refresh()));
+                _window.Invalidate();
             }
         }
         catch (ObjectDisposedException)

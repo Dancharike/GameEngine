@@ -45,7 +45,13 @@ public class CameraComponent
     /// </summary>
     public virtual void Update()
     {
-        var targetCenter = _target.Position + (_target.Size / 2f);
+        float halfWidth = _target.Size.X * 0.5f;
+        float halfHeight = _target.Size.Y * 0.5f;
+        
+        float centerX = _target.Position.X + halfWidth;
+        float centerY = _target.Position.Y + halfHeight;
+        
+        Vector2 targetCenter = new Vector2(centerX, centerY);
         Position = Game.Lerp(Position, targetCenter, _followSpeed);
     }
     
