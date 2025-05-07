@@ -1,4 +1,5 @@
 ﻿using GameEngine.core;
+using GameEngine.interfaces;
 using GameEngine.multi_thread;
 using GameEngine.shapes;
 using GameEngine.utility;
@@ -9,11 +10,14 @@ public class Player : GameObject
 {
     private ActivityAnalyzer _analyzer;
     
+    // ссылка на сам спрайт по его названию
+    private static readonly ISprite _sprite = SpriteLoader.LoadSpriteFromFrames("spr_player_down", 6, 12);
+    
     public Player(Vector2 position) : base 
     (
         "Player",
-        new BoxCollider(position, new Vector2(50, 50)),
-        SpriteLoader.LoadSpriteFromFrames("spr_player_down", 6, 12)
+        new BoxCollider(position, _sprite.GetSize()),
+        _sprite
     ) {}
 
     public override void OnUpdate()

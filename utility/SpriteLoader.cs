@@ -122,5 +122,4 @@ public static class SpriteLoader
 
         return null;
     }
-
 }

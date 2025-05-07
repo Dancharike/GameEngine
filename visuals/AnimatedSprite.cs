@@ -39,6 +39,9 @@ public class AnimatedSprite : ISprite
         _frames = frames;
         _frameCount = frames.Count;
         _frameDelay = Math.Max(1, 60 / framesPerSecond);
+        
+        _frameWidth = _frames[0].Width;
+        _frameHeight = _frames[0].Height;
     }
 
 
@@ -64,5 +67,15 @@ public class AnimatedSprite : ISprite
             _frameCounter = 0;
             _currentFrame = (_currentFrame + 1) % _frameCount;
         }
+    }
+
+    /// <summary>
+    /// Найти размер по ширине и высоте у спрайта.
+    /// Создано для того, чтобы автоматически определять размер спрайта.
+    /// И не было возможности увеличить спрайт в размере.
+    /// </summary>
+    public Vector2 GetSize()
+    {
+        return new Vector2(_frameWidth, _frameHeight);
     }
 }

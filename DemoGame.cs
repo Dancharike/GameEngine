@@ -3,7 +3,6 @@ using GameEngine.core;
 using GameEngine.events;
 using GameEngine.interfaces;
 using GameEngine.multi_thread;
-using GameEngine.shapes;
 using GameEngine.utility;
 
 namespace GameEngine;

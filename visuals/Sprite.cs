@@ -19,4 +19,9 @@ public class Sprite : ISprite
     {
         g.DrawImage(_image, (int)position.X, (int)position.Y, (int)size.X, (int)size.Y );
     }
+
+    public Vector2 GetSize()
+    {
+        return new Vector2(_image.Width, _image.Height);
+    }
 }
