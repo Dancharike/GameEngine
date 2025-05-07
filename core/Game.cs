@@ -85,4 +85,15 @@ public static class Game
         _gameLoop = new GameLoop(_currentScene, _renderer);
         StartGameLoop();
     }
+    
+    /// <summary>
+    /// Метод, что чаще всего используется для плавности передвижения объекта 
+    /// </summary>
+    public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
+    {
+        float one = a.X + (b.X - a.X) * t;
+        float two = a.Y + (b.Y - a.Y) * t;
+        
+        return new Vector2(one, two);
+    }
 }

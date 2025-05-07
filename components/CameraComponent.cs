@@ -18,12 +18,15 @@ public class CameraComponent
     private readonly GameObject _target;
     private readonly WindowHost _window;
 
+    private const float _followSpeed = 0.1f;
+
     public CameraComponent(GameObject target, WindowHost window, Vector2 viewportSize)
     {
         _target = target;
         _window = window;
         ViewSize = viewportSize;
 
+        Position = _target.Position + (_target.Size / 2);
         Scale = CalculateScale();
         Current = this;
     }
@@ -42,9 +45,10 @@ public class CameraComponent
     /// </summary>
     public virtual void Update()
     {
-        Position = _target.Position + (_target.Size / 2f);
+        var targetCenter = _target.Position + (_target.Size / 2f);
+        Position = Game.Lerp(Position, targetCenter, _followSpeed);
     }
-
+    
     public float GetScale()
     {
         return Scale;
