@@ -12,6 +12,6 @@ public class Program
         DemoGame game = new DemoGame();
 
         // движок запускает сцену
-        engine.Start(game, "2D test game", 1024, 768);
+        engine.Start(game, "2D test game", 1920, 1080);
     }
 }

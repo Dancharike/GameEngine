@@ -13,15 +13,23 @@ public class Engine
     public void Start(IScene scene, string title, int width, int height)
     {
         var window = new WindowHost(title, width, height);
-
+        
         if (scene is not IRenderSource renderSource)
         {
             throw new InvalidOperationException("Scene must implement IRenderSource to support rendering.");
         }
         
-        var renderer = new Renderer(window, renderSource);
-        var gameLoop = new GameLoop(scene, renderer);
-
+        var camera = scene is ICameraProvider provider ? provider.GetCamera() : null;
+        var renderer = new Renderer(window, renderSource, camera);
+        var gameLoop = new GameLoop(scene, renderer, camera);
+        
+        // передача ссылки на окно внутрь сцены
+        if (scene is DemoGame demoGame)
+        {
+            demoGame.SetWindow(window);
+            demoGame.SetRenderer(renderer);
+        }
+        
         // остановить текущий GameLoop при закрытии окна приложения
         window.FormClosed += (_, _) =>
         {

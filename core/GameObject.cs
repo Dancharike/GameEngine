@@ -1,4 +1,5 @@
-﻿using GameEngine.interfaces;
+﻿using GameEngine.components;
+using GameEngine.interfaces;
 using GameEngine.utility;
 
 namespace GameEngine.core;
@@ -46,7 +47,7 @@ public class GameObject : IRender, IUpdatable
     
     public void Render(Graphics g)
     {
-        _sprite?.Draw(g, Collider.Position, Collider.Size);
+        _sprite?.Draw(g, Position, Size);
         OnDraw(g);
     }
 }

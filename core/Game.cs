@@ -51,6 +51,13 @@ public static class Game
         EventBus.ClearAll();
         
         _currentScene = (IScene)Activator.CreateInstance(_currentScene.GetType())!;
+
+        if (_currentScene is DemoGame demoGame)
+        {
+            demoGame.SetWindow(_window);
+            demoGame.SetRenderer(_renderer);
+        }
+        
         _renderer.SetRenderSource((IRenderSource)_currentScene);
         _gameLoop = new GameLoop(_currentScene, _renderer);
         StartGameLoop();
@@ -67,6 +74,13 @@ public static class Game
         EventBus.ClearAll();
         
         _currentScene = (IScene)Activator.CreateInstance(_startScene.GetType())!;
+        
+        if (_currentScene is DemoGame demoGame)
+        {
+            demoGame.SetWindow(_window);
+            demoGame.SetRenderer(_renderer);
+        }
+        
         _renderer.SetRenderSource((IRenderSource)_currentScene);
         _gameLoop = new GameLoop(_currentScene, _renderer);
         StartGameLoop();

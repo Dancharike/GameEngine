@@ -16,5 +16,25 @@ public class Vector2
         Y = y;
     }
     
+    public static Vector2 operator +(Vector2 a, Vector2 b)
+    {
+        return new Vector2(a.X + b.X, a.Y + b.Y);
+    }
+    
+    public static Vector2 operator -(Vector2 a, Vector2 b)
+    {
+        return new Vector2(a.X - b.X, a.Y - b.Y);
+    }
+    
+    public static Vector2 operator /(Vector2 v, float scalar)
+    {
+        return new Vector2(v.X / scalar, v.Y / scalar);
+    }
+    
+    public static Vector2 operator *(Vector2 v, float scalar)
+    {
+        return new Vector2(v.X * scalar, v.Y * scalar);
+    }
+    
     public override string ToString() => $"({X}, {Y})";
 }

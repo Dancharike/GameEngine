@@ -1,4 +1,5 @@
-﻿using GameEngine.interfaces;
+﻿using System.Drawing.Drawing2D;
+using GameEngine.interfaces;
 using GameEngine.utility;
 
 namespace GameEngine.visuals;
@@ -17,6 +18,7 @@ public class Sprite : ISprite
 
     public void Draw(Graphics g, Vector2 position, Vector2 size)
     {
+        g.InterpolationMode = InterpolationMode.NearestNeighbor;
         g.DrawImage(_image, (int)position.X, (int)position.Y, (int)size.X, (int)size.Y );
     }
 

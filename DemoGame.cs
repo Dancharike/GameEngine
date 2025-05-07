@@ -1,16 +1,34 @@
 ﻿using GameEngine.assets.player;
+using GameEngine.components;
 using GameEngine.core;
 using GameEngine.events;
+using GameEngine.graphics;
 using GameEngine.interfaces;
 using GameEngine.multi_thread;
+using GameEngine.shapes;
 using GameEngine.utility;
+using GameEngine.window;
 
 namespace GameEngine;
 
-public class DemoGame : IScene, IRenderSource
+public class DemoGame : IScene, IRenderSource, ICameraProvider
 {
     private List<GameObject> _objects = new();
     private ActivityAnalyzer _analyzer;
+    private CameraComponent _camera;
+    private Player _player;
+    private WindowHost _window;
+    private Renderer _renderer;
+
+    public void SetWindow(WindowHost window)
+    {
+        _window = window;
+    }
+
+    public void SetRenderer(Renderer renderer)
+    {
+        _renderer = renderer;
+    }
     
     public void Load()
     {
@@ -40,13 +58,21 @@ public class DemoGame : IScene, IRenderSource
             }
             
         });
-
-        var player = new Player(new Vector2(10, 10));
-        _objects.Add(player);
+        
+        var floorSprite = SpriteLoader.LoadSprite("spr_room_04");
+        var floor = new GameObject("Floor", new BoxCollider(new Vector2(10, 10), floorSprite.GetSize()), floorSprite);
+        _objects.Add(floor);
+        
+        _player = new Player(new Vector2(10, 10));
+        _camera = new CameraComponent(_player, _window, new Vector2(480, 270)); // прикрепить к объекту, указать окно игры, указать размер окна камеры
+        _renderer.SetCamera(_camera);
+        _objects.Add(_player);
     }
 
     public void Update()
     {
+        _camera.Update();
+        
         foreach (var obj in _objects)
         {
             obj.Update();
@@ -58,5 +84,10 @@ public class DemoGame : IScene, IRenderSource
     public IEnumerable<IRender> GetRenderables()
     {
         return _objects;
+    }
+
+    public CameraComponent GetCamera()
+    {
+        return _camera;
     }
 }

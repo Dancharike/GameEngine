@@ -14,6 +14,10 @@ public class WindowHost : Form
         Height = height;
         DoubleBuffered = true;
         
+        // полноэкранный режим
+        FormBorderStyle = FormBorderStyle.None;
+        WindowState = FormWindowState.Maximized;
+        
         // обработка клавиатуры
         KeyPreview = true;
         KeyDown += (s, e) => InputManager.RegisterKeyDown(e.KeyCode);

@@ -1,4 +1,5 @@
-﻿using GameEngine.interfaces;
+﻿using System.Drawing.Drawing2D;
+using GameEngine.interfaces;
 using GameEngine.utility;
 
 namespace GameEngine.visuals;
@@ -52,12 +53,14 @@ public class AnimatedSprite : ISprite
             // отрисовка из спрайт-листа
             Rectangle srcRect = new Rectangle(_currentFrame * _frameWidth, 0, _frameWidth, _frameHeight);
             Rectangle destRect = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
             g.DrawImage(_sheet, destRect, srcRect, GraphicsUnit.Pixel);
         }
         else if (_frames != null)
         {
             // отрисовка из набора изображений
             var image = _frames[_currentFrame];
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
             g.DrawImage(image, (int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
         }
 
